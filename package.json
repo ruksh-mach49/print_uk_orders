@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "@googleapis/drive": "^19.2.0",
+    "aws-sdk": "^2.1692.0",
+    "axios": "^1.13.2",
+    "bottleneck": "^2.19.5",
+    "google-auth-library": "^10.5.0",
+    "node-cron": "^4.2.1"
+  },
+  "type": "module",
+  "name": "printshoes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "print_amazon.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
