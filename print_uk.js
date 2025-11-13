@@ -703,6 +703,7 @@ export async function uk_handler(event) {
         .publish({
           TopicArn: SNS_TOPIC_ARN,
           Subject: "UK Shoes Automation Failed!",
+          Message: "",
         })
         .promise();
     } catch (err) {

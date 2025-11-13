@@ -374,7 +374,6 @@ async function fetchOrders(token, ukTime) {
   try {
     const orders = await getOpenOrders(token);
     // let orders = await fetchTestOrders(token, BASE_URL);
-    orders = orders.data.Data;
     for (let i = 0; i < orders.length; i++) {
       let order = orders[i];
       console.log(`order ${order.NumOrderId}`);
@@ -936,6 +935,7 @@ export async function amazon_handler(event) {
           .publish({
             TopicArn: SNS_TOPIC_ARN,
             Subject: "Amazon Shoes Automation Failed!",
+            Message: "",
           })
           .promise();
       });
