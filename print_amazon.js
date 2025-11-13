@@ -11,7 +11,7 @@ const sns = new AWS.SNS({
 
 const client_email2 = process.env.CLIENT_EMAIL;
 const formatted_key2 = process.env.PRIVATE_KEY.replace(/\\n/g, "\n");
-const root_folder_id = process.env.ROOT_FOLDER_ID;
+const root_folder_id = process.env.ROOT_FOLDER_ID4;
 let client2;
 let driveApi;
 const LINNWORKS_APP_ID = process.env.LINNWORKS_APP_ID;
