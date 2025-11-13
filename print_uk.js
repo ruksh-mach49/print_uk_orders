@@ -167,7 +167,6 @@ async function fetchOrders(token, ukTime) {
       if (res.data.Data.length > 0) {
         for (let i = 0; i < res.data.Data.length; i++) {
           let order = res.data.Data[i];
-          console.log(`order: ${order.NumOrderId}`);
           if (isUkOrder(order)) {
             try {
               order = await getNumOrderWrapper(token, order.NumOrderId);

@@ -376,9 +376,7 @@ async function fetchOrders(token, ukTime) {
     // let orders = await fetchTestOrders(token, BASE_URL);
     for (let i = 0; i < orders.length; i++) {
       let order = orders[i];
-      console.log(`order ${order.NumOrderId}`);
       if (isAmazonShoes(order)) {
-        console.log(`amazon order!`);
         try {
           order = await getNumOrderWrapper(token, order.NumOrderId);
         } catch (err) {
