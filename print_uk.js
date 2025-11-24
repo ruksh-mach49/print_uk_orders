@@ -679,7 +679,7 @@ export async function uk_handler(event) {
         const sendSnsMsg = handleRetries(async () => {
           await sns
             .publish({
-              TOPIC: SNS_TOPIC_ARN,
+              TopicArn: SNS_TOPIC_ARN,
               Subject: "UK Shoes Critical Error!",
               Message: JSON.stringify(printError, null, 2),
             })
