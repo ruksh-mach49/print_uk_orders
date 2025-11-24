@@ -403,6 +403,7 @@ async function downloadAndUpload(
   pdfCount++;
   let res;
   let pdfUrl = "";
+  let pdfName = "";
   try {
     const getPrintResponse = handleRetries(async (token, orderIds) => {
       return await axios({
@@ -465,6 +466,7 @@ async function downloadAndUpload(
       orderType === "double"
         ? `${invoiceFolderPath}/${shipType}_Double_${pdfCount}_${ids.length - errorCount}.pdf`
         : `${invoiceFolderPath}/${shipType}_UK_Orders_${pdfCount}_${ids.length - errorCount}.pdf`;
+    pdfName = downloadFilePath;
     await downloadFile(pdfUrl, downloadFilePath);
     const invoiceFiles = await fsp.readdir(invoiceFolderPath);
     const uploadPromises = [];
@@ -495,6 +497,7 @@ async function downloadAndUpload(
     console.log(`Upload Success`);
   } catch (err) {
     console.log(`ERROR UPLOADING UK SHOES ORDERS!`);
+    console.log(`pdfName: ${pdfName}`);
     console.log(`ids: ${JSON.stringify(ids, null, 2)}`);
     console.log(`count: ${pdfCount}`);
     console.log(`url: ${pdfUrl}`);
@@ -507,6 +510,7 @@ async function downloadAndUpload(
     console.log(errorMsg);
     printError.push({
       msg: `UK Shoes orders upload failed`,
+      pdfName,
       url: `${pdfUrl}`,
       orders: ids,
       time: ukTime,
