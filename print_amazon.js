@@ -632,6 +632,7 @@ async function downloadAndUpload(ids, token, FolderId, orderType, ukTime) {
   pdfCount++;
   let pdfUrl = "";
   let res;
+  let pdfName = "";
   try {
     const printHandler = handleRetries(async (token, orderIds) => {
       return await axios({
@@ -691,6 +692,7 @@ async function downloadAndUpload(ids, token, FolderId, orderType, ukTime) {
     const pdfUrl = res.data.URL;
     console.log(`pdf url: ${pdfUrl}`);
     const downloadFilePath = `${invoiceFolderPath}/${orderType}_${pdfCount}_${ids.length - errorCount}.pdf`;
+    pdfName = downloadFilePath;
     await downloadFile(pdfUrl, downloadFilePath);
     const invoiceFiles = await fsp.readdir(invoiceFolderPath);
     const uploadPromises = [];
@@ -721,6 +723,7 @@ async function downloadAndUpload(ids, token, FolderId, orderType, ukTime) {
     console.log(`Upload Success`);
   } catch (err) {
     console.log(`ERROR UPLOADING AMAZONE SHOES ORDERS!`);
+    console.log(`pdfName: ${pdfName}`);
     console.log(`ids: ${JSON.stringify(ids, null, 2)}`);
     console.log(`count: ${pdfCount}`);
     console.log(`url: ${pdfUrl}`);
@@ -733,6 +736,7 @@ async function downloadAndUpload(ids, token, FolderId, orderType, ukTime) {
     console.log(errorMsg);
     printError.push({
       msg: `Amazon Shoes upload failed`,
+      pdfName,
       url: `${pdfUrl}`,
       orders: ids,
       time: ukTime,
