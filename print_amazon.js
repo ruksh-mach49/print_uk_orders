@@ -689,7 +689,7 @@ async function downloadAndUpload(ids, token, FolderId, orderType, ukTime) {
         }
       }
     }
-    const pdfUrl = res.data.URL;
+    pdfUrl = res.data.URL;
     console.log(`pdf url: ${pdfUrl}`);
     const downloadFilePath = `${invoiceFolderPath}/${orderType}_${pdfCount}_${ids.length - errorCount}.pdf`;
     pdfName = downloadFilePath;
