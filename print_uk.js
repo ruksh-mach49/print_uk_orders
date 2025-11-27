@@ -171,16 +171,16 @@ async function fetchOrders(token, ukTime) {
             try {
               order = await getNumOrderWrapper(token, order.NumOrderId);
             } catch (err) {
-              console.log(`unable to fetch order data, skipping...`);
+              //console.log(`unable to fetch order data, skipping...`);
               continue;
             }
             if (!order.hasOwnProperty("ShippingInfo")) {
-              console.log(`order ${order.NumOrderId} has no shipping info`);
+              //console.log(`order ${order.NumOrderId} has no shipping info`);
               continue;
             }
             if (order.ShippingInfo.TotalWeight < 0.1) {
               try {
-                console.log(`founded a no weight order: ${order.NumOrderId}`);
+                //console.log(`founded a no weight order: ${order.NumOrderId}`);
                 await setOrderPackagingCalculation(order, token);
               } catch (err) {
                 console.log(
@@ -298,9 +298,9 @@ async function setOrderPackagingCalculation(order, token) {
       }),
     );
     await handler(token, order);
-    console.log(
-      `Order, id: ${order.OrderId} NumOrderId: ${order.NumOrderId} pkg calculation successful`,
-    );
+    // console.log(
+    //   `Order, id: ${order.OrderId} NumOrderId: ${order.NumOrderId} pkg calculation successful`,
+    // );
   } catch (err) {
     console.log(
       `Order, id: ${order.OrderId} NumOrderId: ${order.NumOrderId} pkg calculation failed`,
@@ -777,9 +777,9 @@ async function changeShippingMethod(order, token, isExpress) {
       ),
     );
     await handler(token, order, shippingServiceId);
-    console.log(
-      `successfully update shipping service, for order: ${order.OrderId} , NumOrderId: ${order.NumOrderId}`,
-    );
+    // console.log(
+    //   `successfully update shipping service, for order: ${order.OrderId} , NumOrderId: ${order.NumOrderId}`,
+    // );
   } catch (err) {
     console.log(
       `shippingMethod Update FAILED, order: ${order.OrderId} , NumOrderId: ${order.NumOrderId}`,

@@ -1,6 +1,6 @@
 import cron from "node-cron";
-import { uk_handler } from "./print_uk2.js";
-import { amazon_handler } from "./print_amazon2.js";
+import { uk_handler } from "./print_uk.js";
+import { amazon_handler } from "./print_amazon.js";
 import http from "http";
 
 const server = http.createServer((req, res) => {

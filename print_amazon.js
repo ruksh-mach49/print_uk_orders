@@ -188,9 +188,9 @@ async function changeItemObject(order, token) {
   for (let i = 0; i < order.Items.length; i++) {
     const item = order.Items[i];
     if (item.Title.trim() === "") {
-      console.log(
-        `item Title missing, for order: ${order.NumOrderId} and item: ${item.ItemId}`,
-      );
+      // console.log(
+      //   `item Title missing, for order: ${order.NumOrderId} and item: ${item.ItemId}`,
+      // );
       try {
         const updateItem = handleRetries(
           updateItemLimiter.wrap(async (item, token) => {
@@ -253,9 +253,9 @@ async function changeCountry(order, token) {
         });
         if (res.status !== 200)
           throw new Error("update Country operation failed");
-        console.log(
-          `successfully changed country to uk, for order: ${order.OrderId} , NumOrderId: ${order.NumOrderId}`,
-        );
+        // console.log(
+        //   `successfully changed country to uk, for order: ${order.OrderId} , NumOrderId: ${order.NumOrderId}`,
+        // );
       }),
     );
     await changeCountryWrapper(order, token);
@@ -286,9 +286,9 @@ async function changeShippingMethod(order, token, PostalServiceId) {
             },
           });
           if (res.status !== 200) throw new Error("shipping update api error");
-          console.log(
-            `successfully update shipping service, for order: ${order.OrderId} , NumOrderId: ${order.NumOrderId}`,
-          );
+          // console.log(
+          //   `successfully update shipping service, for order: ${order.OrderId} , NumOrderId: ${order.NumOrderId}`,
+          // );
         },
       ),
     );
@@ -325,9 +325,9 @@ async function setOrderPackagingCalculation(order, token, isNoWeight) {
         });
         if (res.status !== 200)
           throw new Error("order packaging calc api error");
-        console.log(
-          `Order, id: ${order.OrderId} NumOrderId: ${order.NumOrderId} pkg calculation successful`,
-        );
+        // console.log(
+        //   `Order, id: ${order.OrderId} NumOrderId: ${order.NumOrderId} pkg calculation successful`,
+        // );
       }),
     );
     await setOrderPackagingCalcWrapper(wt, order, token);
@@ -380,13 +380,13 @@ async function fetchOrders(token, ukTime) {
         try {
           order = await getNumOrderWrapper(token, order.NumOrderId);
         } catch (err) {
-          console.log(`unable to fetch order data, skipping...`);
+          //console.log(`unable to fetch order data, skipping...`);
           continue;
         }
         const data = `${order.OrderId}|${order.NumOrderId}`;
         // 10kg weight check
         if (!order.hasOwnProperty("ShippingInfo")) {
-          console.log(`order ${order.NumOrderId} has no shipping info`);
+          //console.log(`order ${order.NumOrderId} has no shipping info`);
           continue;
         }
         if (order.ShippingInfo.TotalWeight > 10) continue;
@@ -456,13 +456,13 @@ async function fetchOrders(token, ukTime) {
             pkgCalcRes.data[0].TotalDepth === 0 &&
             pkgCalcRes.data[0].TotalWidth === 0)
         ) {
-          console.log(`updating order ${order.NumOrderId} dimensions...`);
+          //console.log(`updating order ${order.NumOrderId} dimensions...`);
           const isNoWeight = order.ShippingInfo.TotalWeight < 0.1;
           try {
-            console.log(`found a zero-dimension order: ${order.NumOrderId}`);
+            //console.log(`found a zero-dimension order: ${order.NumOrderId}`);
             if (isNoWeight)
-              console.log(`founded a no weight order: ${order.NumOrderId}`);
-            await setOrderPackagingCalculation(order, token, isNoWeight);
+              //console.log(`founded a no weight order: ${order.NumOrderId}`);
+              await setOrderPackagingCalculation(order, token, isNoWeight);
           } catch (err) {
             console.log(err);
             console.log(
@@ -484,7 +484,7 @@ async function fetchOrders(token, ukTime) {
         if (
           order.CustomerInfo.Address.Country.toLowerCase() !== "united kingdom"
         ) {
-          console.log(`updating order ${order.NumOrderId} country...`);
+          //console.log(`updating order ${order.NumOrderId} country...`);
           try {
             await changeCountry(order, token);
           } catch (err) {
