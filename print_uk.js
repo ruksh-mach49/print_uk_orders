@@ -174,7 +174,7 @@ async function fetchOrders(token, ukTime) {
               //console.log(`unable to fetch order data, skipping...`);
               continue;
             }
-            if (!order.hasOwnProperty("ShippingInfo")) {
+            if (order == null || !order.hasOwnProperty("ShippingInfo")) {
               //console.log(`order ${order.NumOrderId} has no shipping info`);
               continue;
             }
@@ -821,7 +821,11 @@ function getNotesShippingData(order) {
       let note = notes[i].Note;
       if (note == null || typeof note !== "string") continue;
       note = note.toLowerCase();
-      if (note.includes("shipping service") && note.includes("express"))
+      if (
+        (note.includes("shipping service") ||
+          note.includes("shipping method")) &&
+        note.includes("express")
+      )
         return { express: "express" };
     }
     return { standard: "standard" };

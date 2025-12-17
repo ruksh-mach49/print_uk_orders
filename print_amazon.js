@@ -383,12 +383,12 @@ async function fetchOrders(token, ukTime) {
           //console.log(`unable to fetch order data, skipping...`);
           continue;
         }
-        const data = `${order.OrderId}|${order.NumOrderId}`;
         // 10kg weight check
-        if (!order.hasOwnProperty("ShippingInfo")) {
+        if (order == null || !order.hasOwnProperty("ShippingInfo")) {
           //console.log(`order ${order.NumOrderId} has no shipping info`);
           continue;
         }
+        const data = `${order.OrderId}|${order.NumOrderId}`;
         if (order.ShippingInfo.TotalWeight > 10) continue;
         // amazon prime check
         const identifiers = order.GeneralInfo?.Identifiers; //.some(id => id.IdentifierId === 2);
