@@ -141,13 +141,26 @@ function isUkOrder(order) {
 }
 
 async function fetchOrders(token, ukTime) {
+  const postCodePrefixes = [
+    "ab",
+    "fk",
+    "iv",
+    "kw",
+    "pa",
+    "ph",
+    "hs",
+    "ka",
+    "ze",
+    "bt",
+    "im",
+    "po",
+    "tr",
+    "ll",
+  ];
   let page = 1;
   let count = 0;
-  let noneCount = 0;
-  let universalCount = 0;
-  let isContinue = true;
   try {
-    while (isContinue) {
+    while (true) {
       const handler = handleRetries(async (token) => {
         return await axios({
           url: `${BASE_URL}/api/OpenOrders/GetOpenOrders`,
@@ -174,11 +187,25 @@ async function fetchOrders(token, ukTime) {
               //console.log(`unable to fetch order data, skipping...`);
               continue;
             }
-            if (order == null || !order.hasOwnProperty("ShippingInfo")) {
-              //console.log(`order ${order.NumOrderId} has no shipping info`);
+            if (
+              order == null ||
+              !order.hasOwnProperty("NumOrderId") ||
+              !order.hasOwnProperty("OrderId") ||
+              !order.hasOwnProperty("Items") ||
+              !Array.isArray(order.Items) ||
+              !order.hasOwnProperty("ShippingInfo") ||
+              !order.ShippingInfo.hasOwnProperty("TotalWeight") ||
+              !order.hasOwnProperty("CustomerInfo") ||
+              !order.CustomerInfo.hasOwnProperty("Address") ||
+              !order.CustomerInfo.Address.hasOwnProperty("Country") ||
+              !order.CustomerInfo.Address.hasOwnProperty("EmailAddress") ||
+              !order.CustomerInfo.Address.hasOwnProperty("PostCode") ||
+              typeof order.CustomerInfo.Address.Country !== "string" ||
+              typeof order.CustomerInfo.Address.PostCode !== "string"
+            ) {
               continue;
             }
-            if (order.ShippingInfo.TotalWeight < 0.1) {
+            if (Number(order.ShippingInfo.TotalWeight) < 0.1) {
               try {
                 //console.log(`founded a no weight order: ${order.NumOrderId}`);
                 await setOrderPackagingCalculation(order, token);
@@ -210,13 +237,14 @@ async function fetchOrders(token, ukTime) {
               continue;
             }
             try {
-              const orderData = await getNumOrderWrapper(
-                token,
-                order.NumOrderId.toString(),
-              );
-              const debenhamNotes = getNotesShippingData(orderData);
+              const debenhamNotes = getNotesShippingData(order);
               const isExpress = debenhamNotes.hasOwnProperty("express");
-              await changeShippingMethod(order, token, isExpress);
+              const postCode =
+                order.CustomerInfo.Address.PostCode.trim().toLowerCase();
+              const isOutOfArea = postCodePrefixes.some((pc) =>
+                postCode.startsWith(pc),
+              );
+              await changeShippingMethod(order, token, isExpress, isOutOfArea);
             } catch (err) {
               console.log(
                 `ERR!, stack: ${err.stack}, msg: ${err.message} status: ${err.response?.status} data: ${JSON.stringify(err.response?.data)}`,
@@ -234,6 +262,7 @@ async function fetchOrders(token, ukTime) {
                 const item = order.Items[i];
                 if (item.hasOwnProperty("BinRacks")) {
                   const binracks = item.BinRacks;
+                  if (binracks == null || !Array.isArray(binracks)) continue;
                   for (let j = 0; j < binracks.length; j++) {
                     if (
                       binracks[j].hasOwnProperty("BinRack") &&
@@ -261,8 +290,6 @@ async function fetchOrders(token, ukTime) {
     }
     console.log(`uk single orders: ${count}`);
     console.log(`uk double orders: ${ukDoubleOrders.length}`);
-    console.log(`none count: ${noneCount}`);
-    console.log(`universal count: ${universalCount}`);
     sortedKeys = Object.keys(ukSingleOrders);
     sortedKeys.sort();
     if (sortedKeys.length > 0 && sortedKeys[0] === "") {
@@ -752,10 +779,10 @@ async function changeCountry(order, token) {
   }
 }
 
-async function changeShippingMethod(order, token, isExpress) {
+async function changeShippingMethod(order, token, isExpress, isOutOfArea) {
   try {
     let shippingServiceId = "";
-    if (isExpress) shippingServiceId = M7_24;
+    if (isExpress && !isOutOfArea) shippingServiceId = M7_24;
     else shippingServiceId = M7_48;
     const handler = handleRetries(
       changeShippingMethodLimiter.wrap(
