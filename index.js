@@ -20,7 +20,7 @@ cron.schedule(
   "0 3 * * 0",
   async () => {
     await amazon_handler();
-    //await uk_handler();
+    await uk_handler();
   },
   {
     scheduled: true,
@@ -33,7 +33,7 @@ cron.schedule(
   "0 7 * * 0",
   async () => {
     await amazon_handler();
-    //await uk_handler();
+    await uk_handler();
   },
   {
     scheduled: true,
@@ -46,7 +46,7 @@ cron.schedule(
   "30 3 * * 1",
   async () => {
     await amazon_handler();
-    //await uk_handler();
+    await uk_handler();
   },
   {
     scheduled: true,
@@ -59,7 +59,7 @@ cron.schedule(
   "0 6 * * 1",
   async () => {
     await amazon_handler();
-    //await uk_handler();
+    await uk_handler();
   },
   {
     scheduled: true,
@@ -72,7 +72,7 @@ cron.schedule(
   "0 6 * * 2-5",
   async () => {
     await amazon_handler();
-    //await uk_handler();
+    await uk_handler();
   },
   {
     scheduled: true,
@@ -85,7 +85,7 @@ cron.schedule(
   "30 9 * * 1-5",
   async () => {
     await amazon_handler();
-    //await uk_handler();
+    await uk_handler();
   },
   {
     scheduled: true,
@@ -98,7 +98,7 @@ cron.schedule(
   "30 11 * * 1-5",
   async () => {
     await amazon_handler();
-    //await uk_handler();
+    await uk_handler();
   },
   {
     scheduled: true,
@@ -111,7 +111,7 @@ cron.schedule(
   "0 14 * * 1-5",
   async () => {
     await amazon_handler();
-    //await uk_handler();
+    await uk_handler();
   },
   {
     scheduled: true,
@@ -124,7 +124,7 @@ cron.schedule(
   "15 15 * * 1-5",
   async () => {
     await amazon_handler();
-    //await uk_handler();
+    await uk_handler();
   },
   {
     scheduled: true,
